@@ -7,8 +7,7 @@
 #'
 #' @export
 fqtk_demux <- function(inputs, max_mismatches, read_structures, sample_metadata, output) {
-  exit_code <- .Call(
-    wrap__fqtk_demux_internal,
+  exit_code <- fqtk_demux_internal(
     path.expand(inputs),
     max_mismatches,
     read_structures,
