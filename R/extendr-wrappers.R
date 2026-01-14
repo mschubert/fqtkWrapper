@@ -18,9 +18,9 @@ NULL
 #' @param sample_metadata A string specifying the path to the CSV or TSV file containing sample metadata.
 #' @param output A string specifying the output directory or file path for demultiplexed results.
 #' 
-#' @return A character string indicating success.
+#' @return An integer exit code (0 on success, non-zero on failure).
 #' @export
-fqtk_demux <- function(inputs, max_mismatches, read_structures, sample_metadata, output) .Call(wrap__fqtk_demux, inputs, max_mismatches, read_structures, sample_metadata, output)
+fqtk_demux_internal <- function(inputs, max_mismatches, read_structures, sample_metadata, output) .Call(wrap__fqtk_demux_internal, inputs, max_mismatches, read_structures, sample_metadata, output)
 
 
 # nolint end

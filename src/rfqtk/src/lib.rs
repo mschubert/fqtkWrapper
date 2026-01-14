@@ -9,16 +9,16 @@ use std::process::{Command, Stdio};
 /// @param sample_metadata A string specifying the path to the CSV or TSV file containing sample metadata.
 /// @param output A string specifying the output directory or file path for demultiplexed results.
 /// 
-/// @return A character string indicating success.
+/// @return An integer exit code (0 on success, non-zero on failure).
 /// @export
 #[extendr]
-fn fqtk_demux(
+fn fqtk_demux_internal(
     inputs: Vec<String>,              
     max_mismatches: usize,            
     read_structures: Vec<String>,      
     sample_metadata: String,           
     output: String                    
-) -> Result<String> {
+) -> i32 {
 
     let mut command = Command::new("fqtk");
     command.arg("demux");
@@ -35,27 +35,20 @@ fn fqtk_demux(
            .arg("--output").arg(output)
            .arg("--max-mismatches").arg(max_mismatches.to_string());
 
-    let status = command
+    match command
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .status()
-        .map_err(|e| extendr_api::Error::Other(format!(
-            "Failed to execute fqtk demux: {}",
-            e
-        )))?;
-
-    if status.success() {
-        Ok("Demux operation completed successfully.".to_string())
-    } else {
-        let exit_code = status.code().unwrap_or(1);
-        Err(extendr_api::Error::Other(format!(
-            "fqtk demux failed (exit code {})",
-            exit_code
-        )))
+    {
+        Ok(status) => status.code().unwrap_or(1),
+        Err(e) => {
+            eprintln!("Failed to execute fqtk demux: {}", e);
+            1
+        }
     }
 }
 
 extendr_module! {
     mod fqtkWrapper;
-    fn fqtk_demux;
+    fn fqtk_demux_internal;
 }
