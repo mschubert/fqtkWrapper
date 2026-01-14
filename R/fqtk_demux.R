@@ -9,11 +9,11 @@
 fqtk_demux <- function(inputs, max_mismatches, read_structures, sample_metadata, output) {
   exit_code <- .Call(
     wrap__fqtk_demux_internal,
-    inputs,
+    path.expand(inputs),
     max_mismatches,
     read_structures,
-    sample_metadata,
-    output
+    path.expand(sample_metadata),
+    path.expand(output)
   )
   if (!isTRUE(exit_code == 0L)) {
     stop("fqtk demux failed (see stdout/stderr above).", call. = FALSE)
