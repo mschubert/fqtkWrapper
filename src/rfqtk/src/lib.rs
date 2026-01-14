@@ -1,5 +1,5 @@
 use extendr_api::prelude::*;
-use std::process::{Command};
+use std::process::{Command, Stdio};
 
 /// Exposes the `fqtk demux` functionality as a Rust function that can be called from R.
 /// 
@@ -9,7 +9,7 @@ use std::process::{Command};
 /// @param sample_metadata A string specifying the path to the CSV or TSV file containing sample metadata.
 /// @param output A string specifying the output directory or file path for demultiplexed results.
 /// 
-/// @return A character string indicating success or the error message.
+/// @return A character string indicating success.
 /// @export
 #[extendr]
 fn fqtk_demux(
@@ -18,7 +18,7 @@ fn fqtk_demux(
     read_structures: Vec<String>,      
     sample_metadata: String,           
     output: String                    
-) -> String {
+) -> Result<String> {
 
     let mut command = Command::new("fqtk");
     command.arg("demux");
@@ -35,16 +35,23 @@ fn fqtk_demux(
            .arg("--output").arg(output)
            .arg("--max-mismatches").arg(max_mismatches.to_string());
 
-    match command.output() {
-        Ok(output) => {
-            if output.status.success() {
-                "Demux operation completed successfully.".to_string()
-            } else {
-                let err_msg = String::from_utf8_lossy(&output.stderr);
-                format!("Demux failed: {}", err_msg)
-            }
-        }
-        Err(e) => format!("Failed to execute command: {}", e),
+    let status = command
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .status()
+        .map_err(|e| extendr_api::Error::Other(format!(
+            "Failed to execute fqtk demux: {}",
+            e
+        )))?;
+
+    if status.success() {
+        Ok("Demux operation completed successfully.".to_string())
+    } else {
+        let exit_code = status.code().unwrap_or(1);
+        Err(extendr_api::Error::Other(format!(
+            "fqtk demux failed (exit code {})",
+            exit_code
+        )))
     }
 }
 
