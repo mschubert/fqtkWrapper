@@ -19,7 +19,6 @@ NULL
 #' @param output A string specifying the output directory or file path for demultiplexed results.
 #' 
 #' @return An integer exit code (0 on success, non-zero on failure).
-#' @export
 fqtk_demux_internal <- function(inputs, max_mismatches, read_structures, sample_metadata, output) .Call(wrap__fqtk_demux_internal, inputs, max_mismatches, read_structures, sample_metadata, output)
 
 
