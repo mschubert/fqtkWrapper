@@ -4,7 +4,14 @@
 \alias{fqtk_demux}
 \title{Run \verb{fqtk demux} with exit-code checking}
 \usage{
-fqtk_demux(inputs, max_mismatches, read_structures, sample_metadata, output)
+fqtk_demux(
+  inputs,
+  max_mismatches,
+  read_structures,
+  sample_metadata,
+  output,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{inputs}{A character vector of input FASTQ file paths.}
@@ -16,11 +23,10 @@ fqtk_demux(inputs, max_mismatches, read_structures, sample_metadata, output)
 \item{sample_metadata}{A string specifying the path to the CSV or TSV file containing sample metadata.}
 
 \item{output}{A string specifying the output directory or file path for demultiplexed results.}
-}
-\value{
-An integer exit code (0 on success, non-zero on failure).
+
+\item{verbose}{Logical; when TRUE (default), relay stdout/stderr as messages.}
 }
 \description{
 This wrapper calls the Rust-backed CLI binding and stops on non-zero
-exit codes while streaming stdout/stderr from the tool.
+exit codes while relaying stdout/stderr as R messages.
 }
