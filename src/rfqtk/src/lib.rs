@@ -28,6 +28,7 @@ fn emit_message(line: &str) {
 /// @param read_structures A character vector specifying the read structures for parsing barcodes and sequences.
 /// @param sample_metadata A string specifying the path to the CSV or TSV file containing sample metadata.
 /// @param output A string specifying the output directory or file path for demultiplexed results.
+/// @param verbose A boolean indicating whether to relay stdout/stderr as R messages.
 /// 
 /// @return An integer exit code (0 on success, non-zero on failure).
 #[extendr]
@@ -36,7 +37,8 @@ fn fqtk_demux_internal(
     max_mismatches: usize,            
     read_structures: Vec<String>,      
     sample_metadata: String,           
-    output: String
+    output: String,
+    verbose: bool
 ) -> i32 {
 
     let mut command = Command::new("fqtk");
@@ -69,7 +71,9 @@ fn fqtk_demux_internal(
     drop(tx);
 
     while let Ok(line) = rx.recv() {
-        emit_message(&line.text);
+        if verbose && !line.text.is_empty() {
+            emit_message(&line.text);
+        }
     }
 
     match child.wait() {

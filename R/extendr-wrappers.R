@@ -17,9 +17,10 @@ NULL
 #' @param read_structures A character vector specifying the read structures for parsing barcodes and sequences.
 #' @param sample_metadata A string specifying the path to the CSV or TSV file containing sample metadata.
 #' @param output A string specifying the output directory or file path for demultiplexed results.
+#' @param verbose A boolean indicating whether to relay stdout/stderr as R messages.
 #' 
 #' @return An integer exit code (0 on success, non-zero on failure).
-fqtk_demux_internal <- function(inputs, max_mismatches, read_structures, sample_metadata, output) .Call(wrap__fqtk_demux_internal, inputs, max_mismatches, read_structures, sample_metadata, output)
+fqtk_demux_internal <- function(inputs, max_mismatches, read_structures, sample_metadata, output, verbose) .Call(wrap__fqtk_demux_internal, inputs, max_mismatches, read_structures, sample_metadata, output, verbose)
 
 
 # nolint end

@@ -9,7 +9,8 @@ fqtk_demux_internal(
   max_mismatches,
   read_structures,
   sample_metadata,
-  output
+  output,
+  verbose
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ fqtk_demux_internal(
 \item{sample_metadata}{A string specifying the path to the CSV or TSV file containing sample metadata.}
 
 \item{output}{A string specifying the output directory or file path for demultiplexed results.}
+
+\item{verbose}{A boolean indicating whether to relay stdout/stderr as R messages.}
 }
 \value{
 An integer exit code (0 on success, non-zero on failure).
